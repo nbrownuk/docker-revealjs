@@ -1,7 +1,7 @@
 # Tags and respective `Dockerfile` links
 
-- [`3.1.0-onbuild`, `3-onbuild`, `onbuild` (3.1.0/onbuild/Dockerfile)](https://github.com/nbrownuk/docker-revealjs/blob/master/3.1.0/onbuild/Dockerfile)
-- [`3.1.0`, `3`, `latest` (3.1.0/Dockerfile)](https://github.com/nbrownuk/docker-revealjs/blob/master/3.1.0/Dockerfile)
+- [`3.2.0-onbuild`, `3-onbuild`, `onbuild` (3.2.0/onbuild/Dockerfile)](https://github.com/nbrownuk/docker-revealjs/blob/master/3.2.0/onbuild/Dockerfile)
+- [`3.2.0`, `3`, `latest` (3.2.0/Dockerfile)](https://github.com/nbrownuk/docker-revealjs/blob/master/3.2.0/Dockerfile)
 
 # What is reveal.js?
 
@@ -18,7 +18,7 @@ Once a reveal.js presentation has been successfully authored, it can be encapsul
 In order to encapsulate a presentation inside an image, use the `onbuild` variant. To build the image, create a `Dockerfile` with the single instruction:
 
 ```
-FROM nbrown/revealjs:3.1.0-onbuild
+FROM nbrown/revealjs:3.2.0-onbuild
 ```
 
 and ensure the following are in the build context:

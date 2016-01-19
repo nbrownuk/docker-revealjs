@@ -1,4 +1,4 @@
-FROM node:0.10.40-slim
+FROM node:4.2.4-slim
 
 MAINTAINER Nigel Brown <nigel@windsock.io>
 
@@ -24,9 +24,9 @@ RUN wget -qO /bin/tini $TINI_REPO/releases/download/$TINI_VERSION/tini && \
     chmod +x /bin/tini
 
 # Retrieve reveal.js from Github repsoitory & set ownership
-ENV VERSION             3.1.0
+ENV VERSION             3.2.0
 ENV REPO                https://github.com/hakimel/reveal.js
-ENV SHA                 b436b7793c0c11cfe446822d8729ae3c64ae883d
+ENV SHA                 5230106c9cd86da14bb186d4ef41fec2f3e822dd
 RUN wget -qO /tmp/reveal.js.tar.gz $REPO/archive/$VERSION.tar.gz && \
     echo "$SHA /tmp/reveal.js.tar.gz" | sha1sum --check - && \
     tar -xzf /tmp/reveal.js.tar.gz -C / && \

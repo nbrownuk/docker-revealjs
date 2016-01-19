@@ -43,7 +43,8 @@ Options:
 --showNotes=false                 Sets speaker's notes visible to visible
 --slideNumber=false|''            Displays number of current slide; turn off
                                   with false, default with true, 'c', 'c/t',
-                                  'h/v' (current, total, vertical, horizontal)
+                                  'h/v', 'h.v' (current, total, vertical,
+                                  horizontal)
 --theme=''                        Specify an alternative theme from one of
                                   those built in**
 --touch=true                      Enables touch navigation on devices that
@@ -85,11 +86,11 @@ valid_arg () {
             ;;
         --slideNumber)
             case "$2" in
-                true|false|c|h/v|c/t)
+                true|false|c|h/v|c/t|h.v)
                     return
                     ;;
                 *)
-                    echo "$1: bad argument, please specify true, false, c, c/t or h/v"
+                    echo "$1: bad argument, please specify true, false, c, c/t, h/v or h.v"
                     ;;
             esac
             ;;
@@ -168,7 +169,7 @@ delete_config_param () {
 amend_config_param () {
     if [ "$1" = 'slideNumber' ]; then
         case "$2" in
-            c|h/v|c/t)
+            c|h/v|c/t|h.v)
                 if grep -qE "^[[:blank:]]*$1:[[:blank:]]+[[:alpha:]]+.*," "$file"; then
                     set -- "$1" "${2/$2/\'$2\'}"
                 fi
