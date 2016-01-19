@@ -1,7 +1,7 @@
 # Tags and respective `Dockerfile` links
 
-- [`3.2.0-onbuild`, `3-onbuild`, `onbuild` (3.2.0/onbuild/Dockerfile)](https://github.com/nbrownuk/docker-revealjs/blob/master/3.2.0/onbuild/Dockerfile)
-- [`3.2.0`, `3`, `latest` (3.2.0/Dockerfile)](https://github.com/nbrownuk/docker-revealjs/blob/master/3.2.0/Dockerfile)
+- [`3.2.0-onbuild`, `3-onbuild`, `onbuild` (3.2.0/onbuild/Dockerfile)](https://github.com/nbrownuk/docker-revealjs/blob/master/onbuild/Dockerfile)
+- [`3.2.0`, `3`, `latest` (3.2.0/Dockerfile)](https://github.com/nbrownuk/docker-revealjs/blob/master/Dockerfile)
 
 # What is reveal.js?
 
