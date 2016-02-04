@@ -7,7 +7,7 @@ ENV NPM_CONFIG_LOGLEVEL warn
 
 # Add utilities for installation of dependencies
 RUN apt-get update && \
-    apt-get install -y --install-recommends \
+    apt-get install -y --no-install-recommends \
         g++ \
         make \
         python \
@@ -16,14 +16,14 @@ RUN apt-get update && \
 
 # Add tini as PID 1 to facilitate correct signal handling
 # See https://github.com/nodejs/node-v0.x-archive/issues/9131
-ENV TINI_VERSION        v0.8.2
+ENV TINI_VERSION        v0.9.0
 ENV TINI_REPO           https://github.com/krallin/tini
-ENV TINI_SHA            48bfa00a11481f9894be98e859578e1098195077
+ENV TINI_SHA            e00bce884edb1d94a5fcf2423ee92dc05ddce926
 RUN wget -qO /bin/tini $TINI_REPO/releases/download/$TINI_VERSION/tini && \
     echo "$TINI_SHA /bin/tini" | sha1sum --check - && \
     chmod +x /bin/tini
 
-# Retrieve reveal.js from Github repsoitory & set ownership
+# Retrieve reveal.js from Github repsoitory
 ENV VERSION             3.2.0
 ENV REPO                https://github.com/hakimel/reveal.js
 ENV SHA                 5230106c9cd86da14bb186d4ef41fec2f3e822dd
@@ -31,14 +31,14 @@ RUN wget -qO /tmp/reveal.js.tar.gz $REPO/archive/$VERSION.tar.gz && \
     echo "$SHA /tmp/reveal.js.tar.gz" | sha1sum --check - && \
     tar -xzf /tmp/reveal.js.tar.gz -C / && \
     rm -f /tmp/reveal.js.tar.gz && \
-    mv reveal.js-$VERSION reveal.js && \
-    useradd -r revealjs
+    mv reveal.js-$VERSION reveal.js
 
 # Set working directory for container
 WORKDIR /reveal.js
 
-# Install the grunt CLI and install dependencies
-RUN npm install -g grunt-cli && \
+# Create user, install grunt CLI and dependencies, and set ownership
+RUN useradd -r revealjs && \
+    npm install -g grunt-cli && \
     npm install && \
     npm cache clean && \
     rm -rf /tmp/npm* && \
