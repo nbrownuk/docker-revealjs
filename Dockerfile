@@ -16,17 +16,19 @@ RUN apt-get update && \
 
 # Add tini as PID 1 to facilitate correct signal handling
 # See https://github.com/nodejs/node-v0.x-archive/issues/9131
-ENV TINI_VERSION        v0.9.0
-ENV TINI_REPO           https://github.com/krallin/tini
-ENV TINI_SHA            e00bce884edb1d94a5fcf2423ee92dc05ddce926
-RUN wget -qO /bin/tini $TINI_REPO/releases/download/$TINI_VERSION/tini && \
-    echo "$TINI_SHA /bin/tini" | sha1sum --check - && \
+ENV TINI_VERSION=v0.9.0 \
+    TINI_REPO=https://github.com/krallin/tini
+RUN gpg --keyserver ha.pool.sks-keyservers.net --recv-keys 6380DC428747F6C393FEACA59A84159D7001A4E5 && \
+    wget -qO /bin/tini $TINI_REPO/releases/download/$TINI_VERSION/tini && \
+    wget -qO /bin/tini.asc $TINI_REPO/releases/download/$TINI_VERSION/tini.asc && \
+    gpg --verify /bin/tini.asc && \
+    rm /bin/tini.asc && \
     chmod +x /bin/tini
 
 # Retrieve reveal.js from Github repsoitory
-ENV VERSION             3.2.0
-ENV REPO                https://github.com/hakimel/reveal.js
-ENV SHA                 5230106c9cd86da14bb186d4ef41fec2f3e822dd
+ENV VERSION=3.2.0 \
+    REPO=https://github.com/hakimel/reveal.js \
+    SHA=5230106c9cd86da14bb186d4ef41fec2f3e822dd
 RUN wget -qO /tmp/reveal.js.tar.gz $REPO/archive/$VERSION.tar.gz && \
     echo "$SHA /tmp/reveal.js.tar.gz" | sha1sum --check - && \
     tar -xzf /tmp/reveal.js.tar.gz -C / && \
