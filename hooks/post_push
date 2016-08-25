@@ -1,0 +1,18 @@
+#!/bin/bash
+
+set -e
+
+# Parse image name for repo name and major tag version
+tagStart=$(expr index "$IMAGE_NAME" :)
+repoName=${IMAGE_NAME:0:tagStart-1}
+majorVer=${IMAGE_NAME:tagStart:1}
+
+# Tag and push image with <major>
+echo "Tagging and pushing" ${repoName}:${majorVer}
+docker tag $IMAGE_NAME ${repoName}:${majorVer}
+docker push ${repoName}:${majorVer}
+
+# Tag and push image with latest
+echo "Tagging and pushing" ${repoName}:latest
+docker tag $IMAGE_NAME ${repoName}:latest
+docker push ${repoName}:latest

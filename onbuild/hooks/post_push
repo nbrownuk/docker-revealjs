@@ -1,0 +1,18 @@
+#!/bin/bash
+
+set -e
+
+# Parse image name for repo name and major tag version
+tagStart=$(expr index "$IMAGE_NAME" :)
+repoName=${IMAGE_NAME:0:tagStart-1}
+majorVer=${IMAGE_NAME:tagStart:1}
+
+# Tag and push image with <major>-onbuild
+echo "Tagging and pushing" ${repoName}:${majorVer}-onbuild
+docker tag $IMAGE_NAME ${repoName}:${majorVer}-onbuild
+docker push ${repoName}:${majorVer}-onbuild
+
+# Tag and push image with onbuild
+echo "Tagging and pushing" ${repoName}:onbuild
+docker tag $IMAGE_NAME ${repoName}:onbuild
+docker push ${repoName}:onbuild

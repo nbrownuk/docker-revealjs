@@ -14,6 +14,8 @@ Options:
 --autoSlide=0                     Number of milliseconds before proceeding to
                                   next slide
 --autoSlideStoppable=true         Stop auto-sliding after user input
+--autoSlideMethod=next|right      If set to the non-default setting 'right',
+                                  auto-sliding navigates top level slides only
 --backgroundTransition='default'  Transition style for full page slide
                                   backgrounds*
 --center=true                     Vertical centering of slides
@@ -41,12 +43,13 @@ Options:
 --question=true                   Show help overlay when questionmark pressed
 --rtl=false                       Change presentation direction right to left
 --showNotes=false                 Sets speaker's notes visible to visible
+--shuffle=false                   Randomises the slide order
 --slideNumber=false|''            Displays number of current slide; turn off
                                   with false, default with true, 'c', 'c/t',
                                   'h/v', 'h.v' (current, total, vertical,
                                   horizontal)
 --theme=''                        Specify an alternative theme from one of
-                                  those built in**
+                                  those built-in**
 --touch=true                      Enables touch navigation on devices that
                                   support it
 --transition='default'            Slide transition style*
@@ -55,7 +58,7 @@ Options:
                                   are pre-loaded
 
           *  Transition styles: default|none|fade|slide|convex|concave|zoom
-          ** Themes: black|white|league|beige|sky|night|serif|simple|solarized
+          ** Themes: black|white|league|beige|sky|night|serif|simple|solarized|blood|moon
 
 EOF
 }
@@ -63,6 +66,16 @@ EOF
 
 valid_arg () {
     case "$1" in
+	--autoSlideMethod)
+            case "$2" in
+		next|right)
+		    return
+		    ;;
+		*)
+		    echo "$1: bad argument, please specify next or right"
+		    ;;
+            esac
+	    ;;
         --autoSlide|--viewDistance|--parallaxBackgroundHorizontal|--parallaxBackgroundVertical)
             if [[ "$2" =~ ^[0-9]+$ ]]; then
                 return
@@ -96,11 +109,11 @@ valid_arg () {
             ;;
         --theme)
             case "$2" in
-                black|white|league|beige|sky|night|serif|simple|solarized)
+                black|white|league|beige|sky|night|serif|simple|solarized|blood|moon)
                     return
                     ;;
                 *)
-                    echo "$1: bad argument, please specify one of black, white, league, beige, sky, night, serif, simple, solarized"
+                    echo "$1: bad argument, please specify one of black, white, league, beige, sky, night, serif, simple, solarized, blood, moon"
                     ;;
             esac
             ;;
@@ -145,6 +158,7 @@ set_config () {
         sed -ri "s/(^[[:blank:]]*<link rel=\"stylesheet\" href=\"css\/$1\/)[[:alnum:]]+(\.css\")/\1$2\2/" "$file"
     else
         set -- "${1/question/help}" "${@:2}"
+	[ "$1" = 'autoSlideMethod' ] && set -- "$1" "Reveal.navigate${2^}"
         case $(grep -E "^[[:blank:]]*$1:[[:blank:]]+'{0,1}[^']+'{0,1}.*" "$file" | wc -l) in
             0)
                 insert_config_param $1 $2
@@ -211,6 +225,7 @@ insert_config_param () {
 OPTIONS=$(getopt -n "$0" \
             -o "h" \
             -l "autoSlide:, \
+	        autoSlideMethod:, \
                 autoSlideStoppable:, \
                 backgroundTransition:, \
                 center:, \
@@ -233,6 +248,7 @@ OPTIONS=$(getopt -n "$0" \
                 question:, \
                 rtl:, \
                 showNotes:, \
+		shuffle:, \
                 slideNumber:, \
                 theme:, \
                 touch:, \

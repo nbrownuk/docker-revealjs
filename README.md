@@ -1,7 +1,7 @@
 # Tags and respective `Dockerfile` links
 
-- [`3.2.0-onbuild`, `3-onbuild`, `onbuild` (3.2.0/onbuild/Dockerfile)](https://github.com/nbrownuk/docker-revealjs/blob/master/onbuild/Dockerfile)
-- [`3.2.0`, `3`, `latest` (3.2.0/Dockerfile)](https://github.com/nbrownuk/docker-revealjs/blob/master/Dockerfile)
+- [`3.3.0-onbuild`, `3-onbuild`, `onbuild` (3.3.0/onbuild/Dockerfile)](https://github.com/nbrownuk/docker-revealjs/blob/3.3.0/onbuild/Dockerfile)
+- [`3.3.0`, `3`, `latest` (3.3.0/Dockerfile)](https://github.com/nbrownuk/docker-revealjs/blob/3.3.0/Dockerfile)
 
 # What is reveal.js?
 
@@ -18,7 +18,7 @@ Once a reveal.js presentation has been successfully authored, it can be encapsul
 In order to encapsulate a presentation inside an image, use the `onbuild` variant. To build the image, create a `Dockerfile` with the single instruction:
 
 ```
-FROM nbrown/revealjs:3.2.0-onbuild
+FROM nbrown/revealjs:3.3.0-onbuild
 ```
 
 and ensure the following are in the build context:
@@ -84,7 +84,7 @@ $ docker run -it --rm -p 8000:8000 -v $PWD/index.html:/reveal.js/index.html:ro \
 -v $PWD/menu:/reveal.js/plugin/menu:ro nbrown/revealjs
 ```
 
-Changes that are made to the `index.html` file are watched for, and a server reload occurs when changes are saved. Hence, refreshing your browser will show the effects of any changes made to the `index.html` file, without a restart of the container.
+Changes that are made to the `index.html` file are watched for, and (provided the file is mounted RW) a server reload occurs when changes are saved. Hence, refreshing your browser will show the effects of any changes made to the `index.html` file, without a restart of the container.
 
 This image can also be used to create themes for reveal.js. Themes are authored [using Sass](https://github.com/hakimel/reveal.js/blob/master/css/theme/README.md#creating-a-theme). Once you've defined your theme in Sass, it can be compiled into CSS using the standard image. Create an empty file in your presentation directory for the compiled Sass, mount this into your container along with the Sass source file, and issue the `grunt css-themes` command to compile it into CSS:
 
