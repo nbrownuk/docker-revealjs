@@ -3,6 +3,9 @@
 - [`3.3.0-onbuild`, `3-onbuild`, `onbuild` (3.3.0/onbuild/Dockerfile)](https://github.com/nbrownuk/docker-revealjs/blob/3.3.0/onbuild/Dockerfile)
 - [`3.3.0`, `3`, `latest` (3.3.0/Dockerfile)](https://github.com/nbrownuk/docker-revealjs/blob/3.3.0/Dockerfile)
 
+[![](https://images.microbadger.com/badges/image/nbrown/revealjs.svg)](https://microbadger.com/images/nbrown/revealjs "Get your own image badge on microbadger.com")
+[![](https://images.microbadger.com/badges/version/nbrown/revealjs.svg)](https://microbadger.com/images/nbrown/revealjs "Get your own version badge on microbadger.com")
+
 # What is reveal.js?
 
 [Reveal.js](https://github.com/hakimel/reveal.js) is a framework for creating [slick HTML-based presentations](https://github.com/hakimel/reveal.js/wiki/Example-Presentations). Based on Node.js, reveal.js provides a highly customisable presentation experience, with slides being authored in HTML and/or Markdown.

@@ -55,3 +55,14 @@ EXPOSE 8000
 # Add container entrypoint and default arguments
 CMD ["grunt", "serve"]
 ENTRYPOINT ["/bin/tini", "--"]
+
+# Provide image labels in support of the Label Schema (http://label-schema.org)
+ARG BUILD_DATE
+ARG VCS_REF
+LABEL org.label-schema.build-date=$BUILD_DATE \
+      org.label-schema.license="MIT" \
+      org.label-schema.version="3.3.0" \
+      org.label-schema.url="https://github.com/hakimel/reveal.js" \
+      org.label-schema.vcs-ref=$VCS_REF \
+      org.label-schema.vcs-url="https://github.com/nbrownuk/docker-revealjs.git" \
+      org.label-schema.vcs-type="Git"
