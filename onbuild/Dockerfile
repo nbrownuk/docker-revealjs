@@ -27,9 +27,9 @@ RUN gpg --keyserver ha.pool.sks-keyservers.net --recv-keys 6380DC428747F6C393FEA
     chmod +x /bin/tini
 
 # Retrieve reveal.js from Github repsoitory
-ENV VERSION=3.3.0 \
+ENV VERSION=3.4.0 \
     REPO=https://github.com/hakimel/reveal.js \
-    SHA=45dc8caeb1a1a81d74293552ea3a408bc463dc3e
+    SHA=40b130154495620cb9970f0ab893f1cf00b0571d
 RUN wget -qO /tmp/reveal.js.tar.gz $REPO/archive/$VERSION.tar.gz && \
     echo "$SHA /tmp/reveal.js.tar.gz" | sha1sum --check - && \
     tar -xzf /tmp/reveal.js.tar.gz -C / && \
@@ -75,7 +75,7 @@ ARG BUILD_DATE
 ARG VCS_REF
 LABEL org.label-schema.build-date=$BUILD_DATE \
       org.label-schema.license="MIT" \
-      org.label-schema.version="3.3.0" \
+      org.label-schema.version="3.4.0" \
       org.label-schema.url="https://github.com/hakimel/reveal.js" \
       org.label-schema.vcs-ref=$VCS_REF \
       org.label-schema.vcs-url="https://github.com/nbrownuk/docker-revealjs.git" \
