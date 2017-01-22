@@ -11,6 +11,7 @@ RUN apt-get update && \
         g++ \
         make \
         python \
+        bzip2 \
         wget && \
     rm -rf /var/lib/apt/lists/*
 
