@@ -48,6 +48,8 @@ Options:
                                   with false, default with true, 'c', 'c/t',
                                   'h/v', 'h.v' (current, total, vertical,
                                   horizontal)
+--syntaxStyle='zenburn'           CSS style to use for code syntax (assumes a
+                                  css file located in lib/css)
 --theme=''                        Specify an alternative theme from one of
                                   those built-in**
 --touch=true                      Enables touch navigation on devices that
@@ -66,16 +68,16 @@ EOF
 
 valid_arg () {
     case "$1" in
-	--autoSlideMethod)
+        --autoSlideMethod)
             case "$2" in
-		next|right)
-		    return
-		    ;;
-		*)
-		    echo "$1: bad argument, please specify next or right"
-		    ;;
-            esac
-	    ;;
+                next|right)
+                    return
+                    ;;
+                *)
+                    echo "$1: bad argument, please specify next or right"
+                    ;;
+                esac
+            ;;
         --autoSlide|--viewDistance|--parallaxBackgroundHorizontal|--parallaxBackgroundVertical)
             if [[ "$2" =~ ^[0-9]+$ ]]; then
                 return
@@ -106,6 +108,13 @@ valid_arg () {
                     echo "$1: bad argument, please specify true, false, c, c/t, h/v or h.v"
                     ;;
             esac
+            ;;
+        --syntaxStyle)
+            if [ -f lib/css/$2.css ]; then
+                return
+            else
+                echo "$1: bad argument, 'lib/css/$2.css' does not exist"
+            fi
             ;;
         --theme)
             case "$2" in
@@ -154,24 +163,30 @@ valid_arg () {
 
 set_config () {
     set -- "${1#--}" "${@:2}"
-    if [ "$1" = 'theme' ]; then
-        sed -ri "s/(^[[:blank:]]*<link rel=\"stylesheet\" href=\"css\/$1\/)[[:alnum:]]+(\.css\")/\1$2\2/" "$file"
-    else
-        set -- "${1/question/help}" "${@:2}"
-	[ "$1" = 'autoSlideMethod' ] && set -- "$1" "Reveal.navigate${2^}"
-        case $(grep -E "^[[:blank:]]*$1:[[:blank:]]+'{0,1}[^']+'{0,1}.*" "$file" | wc -l) in
-            0)
-                insert_config_param $1 $2
-                ;;
-            1)
-                amend_config_param $1 $2
-                ;;
-            *)
-                delete_config_param $1 $2
-                insert_config_param $1 $2
-                ;;
-        esac
-    fi
+    case "$1" in
+        theme)
+            sed -ri "s/(^[[:blank:]]*<link rel=\"stylesheet\" href=\"css\/$1\/)[[:graph:]]+(\.css\")/\1$2\2/" "$file"
+            ;;
+        syntaxStyle)
+            sed -ri "s/(^[[:blank:]]*<link rel=\"stylesheet\" href=\"lib\/css\/)[[:graph:]]+(\.css\")/\1$2\2/" "$file"
+            ;;
+        *)
+            set -- "${1/question/help}" "${@:2}"
+            [ "$1" = 'autoSlideMethod' ] && set -- "$1" "Reveal.navigate${2^}"
+            case $(grep -E "^[[:blank:]]*$1:[[:blank:]]+'{0,1}[^']+'{0,1}.*" "$file" | wc -l) in
+                0)
+                    insert_config_param $1 $2
+                    ;;
+                1)
+                    amend_config_param $1 $2
+                    ;;
+                *)
+                    delete_config_param $1 $2
+                    insert_config_param $1 $2
+                    ;;
+            esac
+            ;;
+    esac
 }
 
 
@@ -225,7 +240,7 @@ insert_config_param () {
 OPTIONS=$(getopt -n "$0" \
             -o "h" \
             -l "autoSlide:, \
-	        autoSlideMethod:, \
+                autoSlideMethod:, \
                 autoSlideStoppable:, \
                 backgroundTransition:, \
                 center:, \
@@ -248,8 +263,9 @@ OPTIONS=$(getopt -n "$0" \
                 question:, \
                 rtl:, \
                 showNotes:, \
-		shuffle:, \
+                shuffle:, \
                 slideNumber:, \
+                syntaxStyle:, \
                 theme:, \
                 touch:, \
                 transition:, \

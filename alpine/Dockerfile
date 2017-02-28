@@ -1,4 +1,4 @@
-FROM node:4-slim
+FROM node:4-alpine
 
 # Define build time arguments
 ARG BUILD_DATE
@@ -7,10 +7,6 @@ ARG VCS_REF
 # npm loglevel in base image is verbose, adjust to warnings only
 ENV NPM_CONFIG_LOGLEVEL warn
 
-# Set environment variables for tini GitHub repo
-ENV TINI_VERSION=v0.14.0 \
-    TINI_REPO=https://github.com/krallin/tini
-
 # Set environment variables for reveal.js GitHub repo
 ENV VERSION=3.4.1 \
     REPO=https://github.com/hakimel/reveal.js \
@@ -18,37 +14,39 @@ ENV VERSION=3.4.1 \
 
 RUN set -ex \
     \
-    && apt-get update \
-    \
-# Install necessary utilities
-    && apt-get install -y --no-install-recommends bzip2 \
-#    \
 # Add tini for handling signals
 # https://github.com/nodejs/docker-node/blob/master/docs/BestPractices.md#handling-kernel-signals
-    && gpg --keyserver ha.pool.sks-keyservers.net --recv-keys 6380DC428747F6C393FEACA59A84159D7001A4E5 \
-    && wget -qO /bin/tini $TINI_REPO/releases/download/$TINI_VERSION/tini \
-    && wget -qO /bin/tini.asc $TINI_REPO/releases/download/$TINI_VERSION/tini.asc \
-    && gpg --verify /bin/tini.asc \
-    && rm /bin/tini.asc \
-    && chmod +x /bin/tini \
+    && apk add --no-cache tini \
+    \
+# Install dependencies for fetching reveal.js source code
+    && apk add --no-cache --virtual .fetch-deps \
+        ca-certificates \
+        tar \
+        wget \
     \
 # Fetch reveal.js
     && wget -qO /tmp/reveal.js.tar.gz $REPO/archive/$VERSION.tar.gz \
-    && echo "$SHA1 /tmp/reveal.js.tar.gz" | sha1sum --check - \
+    && echo "$SHA1  /tmp/reveal.js.tar.gz" | sha1sum -c - \
     && tar -xzf /tmp/reveal.js.tar.gz -C / \
     && rm -f /tmp/reveal.js.tar.gz \
     && mv reveal.js-$VERSION reveal.js \
     \
-# Install dependencies
+# Install build tools
+    && apk add --no-cache --virtual .build-deps \
+        g++ \
+        make \
+        python \
+    \
+# Build and install dependencies
     && mkdir -p /reveal.js/node_modules \
     && npm install -g grunt-cli \
     && npm install --prefix /reveal.js \
     \
 # Clean up
     && npm cache clean \
-    && rm -rf /tmp/npm* /tmp/phantomjs \
-    && apt-get purge -y bzip2 \
-    && rm -rf /var/lib/apt/lists/* \
+    && rm -rf /root/.node-gyp /tmp/npm* /tmp/phantomjs \
+    && apk del .fetch-deps \
+    && apk del .build-deps \
     && chown -R node:node /reveal.js
 
 WORKDIR /reveal.js
@@ -62,7 +60,7 @@ CMD ["grunt", "serve"]
 
 # Define image metadata (https://microbadger.com/labels)
 LABEL org.label-schema.build-date=$BUILD_DATE \
-      org.label-schema.docker.dockerfile="/Dockerfile" \
+      org.label-schema.docker.dockerfile="/alpine/Dockerfile" \
       org.label-schema.license=MIT \
       org.label-schema.name="reveal.js" \
       org.label-schema.version=$VERSION \
@@ -70,4 +68,3 @@ LABEL org.label-schema.build-date=$BUILD_DATE \
       org.label-schema.vcs-ref=$VCS_REF \
       org.label-schema.vcs-url="https://github.com/nbrownuk/docker-revealjs.git" \
       org.label-schema.vcs-type=Git
-
