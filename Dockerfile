@@ -1,4 +1,4 @@
-FROM node:4-slim
+FROM node:6-slim
 
 # Define build time arguments
 ARG BUILD_DATE
@@ -12,9 +12,9 @@ ENV TINI_VERSION=v0.14.0 \
     TINI_REPO=https://github.com/krallin/tini
 
 # Set environment variables for reveal.js GitHub repo
-ENV VERSION=3.4.1 \
+ENV VERSION=3.5.0 \
     REPO=https://github.com/hakimel/reveal.js \
-    SHA1=64bf63c54e2a01ebcec905233527872940317426
+    SHA1=b444529be8a1041942f3f30ae4f626e10497498c
 
 RUN set -ex \
     \
@@ -25,7 +25,7 @@ RUN set -ex \
 #    \
 # Add tini for handling signals
 # https://github.com/nodejs/docker-node/blob/master/docs/BestPractices.md#handling-kernel-signals
-    && gpg --keyserver ha.pool.sks-keyservers.net --recv-keys 6380DC428747F6C393FEACA59A84159D7001A4E5 \
+    && gpg --keyserver ha.pool.sks-keyservers.net --recv-keys 595E85A6B1B4779EA4DAAEC70B588DFF0527A9B7 \
     && wget -qO /bin/tini $TINI_REPO/releases/download/$TINI_VERSION/tini \
     && wget -qO /bin/tini.asc $TINI_REPO/releases/download/$TINI_VERSION/tini.asc \
     && gpg --verify /bin/tini.asc \
@@ -70,4 +70,3 @@ LABEL org.label-schema.build-date=$BUILD_DATE \
       org.label-schema.vcs-ref=$VCS_REF \
       org.label-schema.vcs-url="https://github.com/nbrownuk/docker-revealjs.git" \
       org.label-schema.vcs-type=Git
-

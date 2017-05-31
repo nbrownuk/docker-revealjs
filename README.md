@@ -1,8 +1,8 @@
 # Tags and respective `Dockerfile` links
 
-- [`3.4.1-alpine`, `3-alpine`, `alpine` *(3.4.1/alpine/Dockerfile)*](https://github.com/nbrownuk/docker-revealjs/blob/3.4.1/alpine/Dockerfile)
-- [`3.4.1-onbuild`, `3-onbuild`, `onbuild` *(3.4.1/onbuild/Dockerfile)*](https://github.com/nbrownuk/docker-revealjs/blob/3.4.1/onbuild/Dockerfile)
-- [`3.4.1`, `3`, `latest` *(3.4.1/Dockerfile)*](https://github.com/nbrownuk/docker-revealjs/blob/3.4.1/Dockerfile)
+- [`3.5.0-alpine`, `3-alpine`, `alpine` *(3.5.0/alpine/Dockerfile)*](https://github.com/nbrownuk/docker-revealjs/blob/3.5.0/alpine/Dockerfile)
+- [`3.5.0-onbuild`, `3-onbuild`, `onbuild` *(3.5.0/onbuild/Dockerfile)*](https://github.com/nbrownuk/docker-revealjs/blob/3.5.0/onbuild/Dockerfile)
+- [`3.5.0`, `3`, `latest` *(3.5.0/Dockerfile)*](https://github.com/nbrownuk/docker-revealjs/blob/3.5.0/Dockerfile)
 
 [![](https://images.microbadger.com/badges/image/nbrown/revealjs.svg)](https://microbadger.com/images/nbrown/revealjs "Get your own image badge on microbadger.com")
 [![](https://images.microbadger.com/badges/version/nbrown/revealjs.svg)](https://microbadger.com/images/nbrown/revealjs "Get your own version badge on microbadger.com")
@@ -22,7 +22,7 @@ Once a reveal.js presentation has been successfully authored, it can be encapsul
 In order to encapsulate a presentation inside an image, use the `onbuild` variant. To build the image, create a `Dockerfile` with the single instruction:
 
 ```
-FROM nbrown/revealjs:3.4.1-onbuild
+FROM nbrown/revealjs:3.5.0-onbuild
 ```
 
 and ensure the following are in the build context:

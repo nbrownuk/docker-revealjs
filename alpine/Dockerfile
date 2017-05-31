@@ -1,4 +1,4 @@
-FROM node:4-alpine
+FROM node:6-alpine
 
 # Define build time arguments
 ARG BUILD_DATE
@@ -8,9 +8,9 @@ ARG VCS_REF
 ENV NPM_CONFIG_LOGLEVEL warn
 
 # Set environment variables for reveal.js GitHub repo
-ENV VERSION=3.4.1 \
+ENV VERSION=3.5.0 \
     REPO=https://github.com/hakimel/reveal.js \
-    SHA1=64bf63c54e2a01ebcec905233527872940317426
+    SHA1=b444529be8a1041942f3f30ae4f626e10497498c
 
 RUN set -ex \
     \
