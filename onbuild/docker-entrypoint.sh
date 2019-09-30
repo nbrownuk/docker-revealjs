@@ -25,6 +25,12 @@ Options:
 --center=true                     Vertical centering of slides (true|false)
 --controls=true                   Display controls in the bottom right corner
                                   (true|false)
+--controlsTutorial=true           Help the user learn the controls by providing
+                                  hints, for example bybouncing the down arrow
+                                  when they first encounter a vertical slide
+                                  (true|false)
+--controlsLayout='bottom-right'   Determines where controls appear
+                                  ('edges'|'bottom-right')
 --defaultTiming=120               Sets the pacing timer in seconds (per slide)
                                   in Speaker Notes view
 --display='block'                 Sets CSS display property for slide layout,
@@ -34,7 +40,14 @@ Options:
                                   limited portion of the screen (true|false)
 --fragments=true                  Turns fragments on and off globally
                                   (true|false)
+--fragmentInURL=false             Flags whether to include the current fragment
+                                  in the URL, so that reloading brings you to
+                                  the same fragment position
+                                  (true|false)
 -h|--help                         Prints this usage text
+--hashOneBasedIndex=false         Use 1 based indexing for # links to match
+                                  slide number (default is zero based)
+                                  (true|false)
 --hideAddressBar=true             Hides the address bar on mobile devices
                                   (true|false)
 --history=false                   Push each slide change to the browser history
@@ -52,6 +65,8 @@ Options:
                                   pixel support, e.g. "2100px 900px)
 --parallaxBackgroundVertical=0    On slide change, amount of pixels to move
                                   parallax background (vertical)
+--pdfSeparateFragments=true       Prints each fragment on a separate slide
+                                  (true|false)
 --previewLinks=false              Open links in an iframe preview overlay
                                   (true|false)
 --progress=true                   Displays a progress bar at bottom of screen
@@ -81,8 +96,8 @@ Options:
 --viewDistance=3                  Number of slides away from the current that
                                   are pre-loaded
 
-*  Transition styles: none|fade|slide|convex|concave|zoom
-** Themes: black|white|league|beige|sky|night|serif|simple|solarized
+*  Transition styles: concave|convex|fade|none|slide|zoom
+** Themes: beige|black|blood|league|moon|night|serif|simple|sky|solarized|white
 
 EOF
 }
@@ -116,6 +131,16 @@ valid_arg () {
             else
                 echo "$1: bad argument, please specify an integer"
             fi
+            ;;
+        --controlsLayout)
+            case "$2" in
+                edges|bottom-right)
+                    return
+                    ;;
+                *)
+                    echo "$1: bad argument, please specify edges or bottom-right"
+                    ;;
+                esac
             ;;
         --display)
             if [[ "$2" =~ ^[a-z-]+$ ]]; then
@@ -266,7 +291,7 @@ amend_config_param () {
 insert_config_param () {
     WSPACE=$(sed -rn 's/^([[:blank:]]*)Reveal.initialize\(\{/\1/p' "$file")
     case "$1" in
-        display|showSlideNumber|transition|transitionSpeed|backgroundTransition|parallaxBackgroundImage|parallaxBackgroundSize)
+        controlsLayout|display|showSlideNumber|transition|transitionSpeed|backgroundTransition|parallaxBackgroundImage|parallaxBackgroundSize)
             sed -ri "/^[[:blank:]]*Reveal.initialize\(\{/ a\\$WSPACE\t$1: '$2'," "$file"
             ;;
         slideNumber)
@@ -295,10 +320,14 @@ OPTIONS=$(getopt -n "$0" \
                 backgroundTransition:, \
                 center:, \
                 controls:, \
+                controlsLayout:, \
+                controlsTutorial:, \
                 defaultTiming:, \
                 display:, \
                 embedded:, \
                 fragments:, \
+                fragmentInURL:, \
+                hashOneBasedIndex:, \
                 help, \
                 hideAddressBar:, \
                 history:, \
@@ -310,6 +339,7 @@ OPTIONS=$(getopt -n "$0" \
                 parallaxBackgroundImage:, \
                 parallaxBackgroundSize:, \
                 parallaxBackgroundVertical:, \
+                pdfSeparateFragments:, \
                 previewLinks:, \
                 progress:, \
                 question:, \
