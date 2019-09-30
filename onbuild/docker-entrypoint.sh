@@ -25,6 +25,12 @@ Options:
 --center=true                     Vertical centering of slides (true|false)
 --controls=true                   Display controls in the bottom right corner
                                   (true|false)
+--controlsTutorial=true           Help the user learn the controls by providing
+                                  hints, for example bybouncing the down arrow
+                                  when they first encounter a vertical slide
+                                  (true|false)
+--controlsLayout='bottom-right'   Determines where controls appear
+                                  ('edges'|'bottom-right')
 --defaultTiming=120               Sets the pacing timer in seconds (per slide)
                                   in Speaker Notes view
 --display='block'                 Sets CSS display property for slide layout,
@@ -34,8 +40,22 @@ Options:
                                   limited portion of the screen (true|false)
 --fragments=true                  Turns fragments on and off globally
                                   (true|false)
+--fragmentInURL=false             Flags whether to include the current fragment
+                                  in the URL, so that reloading brings you to
+                                  the same fragment position
+                                  (true|false)
 -h|--help                         Prints this usage text
+--hash=false                      Add the current slide number to the URL hash
+                                  so that reloading the page/copying the URL
+                                  will return you to the same slide
+                                  (true|false)
+--hashOneBasedIndex=false         Use 1 based indexing for # links to match
+                                  slide number (default is zero based)
+                                  (true|false)
 --hideAddressBar=true             Hides the address bar on mobile devices
+                                  (true|false)
+--hideCursorTime=5000             Time before the cursor is hidden (in ms)
+--hideInactiveCursor=true         Hide cursor if inactive
                                   (true|false)
 --history=false                   Push each slide change to the browser history
                                   (true|false)
@@ -44,6 +64,9 @@ Options:
 --loop=false                      Loop the presentation (true|false)
 --mouseWheel=false                Enable slide navigation via mouse wheel
                                   (true|false)
+--navigationMode='default'        Changes the behavior of our navigation
+                                  directions. See official docs for details.
+                                  (default|linear|grid)
 --overview=true                   Enable the slide overview mode (true|false)
 --parallaxBackgroundHorizontal=0  On slide change, amount of pixels to move
                                   parallax background (horizontal)
@@ -52,6 +75,11 @@ Options:
                                   pixel support, e.g. "2100px 900px)
 --parallaxBackgroundVertical=0    On slide change, amount of pixels to move
                                   parallax background (vertical)
+--pdfSeparateFragments=true       Prints each fragment on a separate slide
+                                  (true|false)
+--preloadIframes=null             Global override for preloading lazy-loaded
+                                  iframes
+                                  (null|true|false)
 --previewLinks=false              Open links in an iframe preview overlay
                                   (true|false)
 --progress=true                   Displays a progress bar at bottom of screen
@@ -81,8 +109,8 @@ Options:
 --viewDistance=3                  Number of slides away from the current that
                                   are pre-loaded
 
-*  Transition styles: none|fade|slide|convex|concave|zoom
-** Themes: black|white|league|beige|sky|night|serif|simple|solarized
+*  Transition styles: concave|convex|fade|none|slide|zoom
+** Themes: beige|black|blood|league|moon|night|serif|simple|sky|solarized|white
 
 EOF
 }
@@ -90,7 +118,7 @@ EOF
 
 valid_arg () {
     case "$1" in
-        --autoPlayMedia)
+        --autoPlayMedia|--preloadIframes)
             case "$2" in
                 null|false|true)
                     return
@@ -110,12 +138,22 @@ valid_arg () {
                     ;;
                 esac
             ;;
-        --autoSlide|--defaultTiming|--viewDistance|--parallaxBackgroundHorizontal|--parallaxBackgroundVertical)
+        --autoSlide|--defaultTiming|--hideCursorTime|--viewDistance|--parallaxBackgroundHorizontal|--parallaxBackgroundVertical)
             if [[ "$2" =~ ^[0-9]+$ ]]; then
                 return
             else
                 echo "$1: bad argument, please specify an integer"
             fi
+            ;;
+        --controlsLayout)
+            case "$2" in
+                edges|bottom-right)
+                    return
+                    ;;
+                *)
+                    echo "$1: bad argument, please specify edges or bottom-right"
+                    ;;
+                esac
             ;;
         --display)
             if [[ "$2" =~ ^[a-z-]+$ ]]; then
@@ -123,6 +161,16 @@ valid_arg () {
             else
                 echo "$1: bad argument, please specify a valid CSS display property"
             fi
+            ;;
+        --navigationMode)
+            case "$2" in
+                default|linear|grid)
+                    return
+                    ;;
+                *)
+                    echo "$1: bad argument, please specify default, linear or grid"
+                    ;;
+                esac
             ;;
         --parallaxBackgroundImage)
             if wget -S --spider "$2" 2>&1 | grep -q "HTTP/1.1 200 OK"; then
@@ -266,7 +314,7 @@ amend_config_param () {
 insert_config_param () {
     WSPACE=$(sed -rn 's/^([[:blank:]]*)Reveal.initialize\(\{/\1/p' "$file")
     case "$1" in
-        display|showSlideNumber|transition|transitionSpeed|backgroundTransition|parallaxBackgroundImage|parallaxBackgroundSize)
+        controlsLayout|display|navigationMode|showSlideNumber|transition|transitionSpeed|backgroundTransition|parallaxBackgroundImage|parallaxBackgroundSize)
             sed -ri "/^[[:blank:]]*Reveal.initialize\(\{/ a\\$WSPACE\t$1: '$2'," "$file"
             ;;
         slideNumber)
@@ -295,21 +343,31 @@ OPTIONS=$(getopt -n "$0" \
                 backgroundTransition:, \
                 center:, \
                 controls:, \
+                controlsLayout:, \
+                controlsTutorial:, \
                 defaultTiming:, \
                 display:, \
                 embedded:, \
                 fragments:, \
+                fragmentInURL:, \
+                hash:, \
+                hashOneBasedIndex:, \
                 help, \
                 hideAddressBar:, \
+                hideCursorTime:, \
+                hideInactiveCursor:, \
                 history:, \
                 keyboard:, \
                 loop:, \
                 mouseWheel:, \
+                navigationMode:, \
                 overview:, \
                 parallaxBackgroundHorizontal:, \
                 parallaxBackgroundImage:, \
                 parallaxBackgroundSize:, \
                 parallaxBackgroundVertical:, \
+                pdfSeparateFragments:, \
+                preloadIframes:, \
                 previewLinks:, \
                 progress:, \
                 question:, \

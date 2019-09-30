@@ -1,4 +1,4 @@
-FROM node:6-slim
+FROM node:8-slim
 
 # Define build time arguments
 ARG BUILD_DATE
@@ -8,13 +8,13 @@ ARG VCS_REF
 ENV NPM_CONFIG_LOGLEVEL warn
 
 # Set environment variables for tini GitHub repo
-ENV TINI_VERSION=v0.14.0 \
+ENV TINI_VERSION=v0.18.0 \
     TINI_REPO=https://github.com/krallin/tini
 
 # Set environment variables for reveal.js GitHub repo
-ENV VERSION=3.5.0 \
+ENV VERSION=3.8.0 \
     REPO=https://github.com/hakimel/reveal.js \
-    SHA1=b444529be8a1041942f3f30ae4f626e10497498c
+    SHA1=f04ad6a1f727de19c9c1c0cc72deac120067de6e
 
 RUN set -ex \
     \
@@ -45,7 +45,6 @@ RUN set -ex \
     && npm install --prefix /reveal.js \
     \
 # Clean up
-    && npm cache clean \
     && rm -rf /tmp/npm* /tmp/phantomjs \
     && apt-get purge -y bzip2 \
     && rm -rf /var/lib/apt/lists/* \
