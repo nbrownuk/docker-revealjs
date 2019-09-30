@@ -12,9 +12,9 @@ ENV TINI_VERSION=v0.18.0 \
     TINI_REPO=https://github.com/krallin/tini
 
 # Set environment variables for reveal.js GitHub repo
-ENV VERSION=3.5.0 \
+ENV VERSION=3.6.0 \
     REPO=https://github.com/hakimel/reveal.js \
-    SHA1=b444529be8a1041942f3f30ae4f626e10497498c
+    SHA1=c044177d84e959c9c41edbb4dbc9b1dffa4b40d1
 
 RUN set -ex \
     \

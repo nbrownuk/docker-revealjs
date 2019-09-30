@@ -25,6 +25,12 @@ Options:
 --center=true                     Vertical centering of slides (true|false)
 --controls=true                   Display controls in the bottom right corner
                                   (true|false)
+--controlsTutorial=true           Help the user learn the controls by providing
+                                  hints, for example bybouncing the down arrow
+                                  when they first encounter a vertical slide
+                                  (true|false)
+--controlsLayout='bottom-right'   Determines where controls appear
+                                  ('edges'|'bottom-right')
 --defaultTiming=120               Sets the pacing timer in seconds (per slide)
                                   in Speaker Notes view
 --display='block'                 Sets CSS display property for slide layout,
@@ -81,8 +87,8 @@ Options:
 --viewDistance=3                  Number of slides away from the current that
                                   are pre-loaded
 
-*  Transition styles: none|fade|slide|convex|concave|zoom
-** Themes: black|white|league|beige|sky|night|serif|simple|solarized
+*  Transition styles: concave|convex|fade|none|slide|zoom
+** Themes: beige|black|blood|league|moon|night|serif|simple|sky|solarized|white
 
 EOF
 }
@@ -116,6 +122,16 @@ valid_arg () {
             else
                 echo "$1: bad argument, please specify an integer"
             fi
+            ;;
+        --controlsLayout)
+            case "$2" in
+                edges|bottom-right)
+                    return
+                    ;;
+                *)
+                    echo "$1: bad argument, please specify edges or bottom-right"
+                    ;;
+                esac
             ;;
         --display)
             if [[ "$2" =~ ^[a-z-]+$ ]]; then
@@ -266,7 +282,7 @@ amend_config_param () {
 insert_config_param () {
     WSPACE=$(sed -rn 's/^([[:blank:]]*)Reveal.initialize\(\{/\1/p' "$file")
     case "$1" in
-        display|showSlideNumber|transition|transitionSpeed|backgroundTransition|parallaxBackgroundImage|parallaxBackgroundSize)
+        controlsLayout|display|showSlideNumber|transition|transitionSpeed|backgroundTransition|parallaxBackgroundImage|parallaxBackgroundSize)
             sed -ri "/^[[:blank:]]*Reveal.initialize\(\{/ a\\$WSPACE\t$1: '$2'," "$file"
             ;;
         slideNumber)
@@ -295,6 +311,8 @@ OPTIONS=$(getopt -n "$0" \
                 backgroundTransition:, \
                 center:, \
                 controls:, \
+                controlsLayout:, \
+                controlsTutorial:, \
                 defaultTiming:, \
                 display:, \
                 embedded:, \
