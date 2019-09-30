@@ -45,7 +45,6 @@ RUN set -ex \
     && npm install --prefix /reveal.js \
     \
 # Clean up
-    && npm cache clean \
     && rm -rf /tmp/npm* /tmp/phantomjs \
     && apt-get purge -y bzip2 \
     && rm -rf /var/lib/apt/lists/* \

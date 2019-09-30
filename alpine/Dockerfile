@@ -43,7 +43,6 @@ RUN set -ex \
     && npm install --prefix /reveal.js \
     \
 # Clean up
-    && npm cache clean \
     && rm -rf /root/.node-gyp /tmp/npm* /tmp/phantomjs \
     && apk del .fetch-deps \
     && apk del .build-deps \
