@@ -1,4 +1,4 @@
-FROM node:6-slim
+FROM node:8-slim
 
 # Define build time arguments
 ARG BUILD_DATE
