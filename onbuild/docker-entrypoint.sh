@@ -40,7 +40,14 @@ Options:
                                   limited portion of the screen (true|false)
 --fragments=true                  Turns fragments on and off globally
                                   (true|false)
+--fragmentInURL=false             Flags whether to include the current fragment
+                                  in the URL, so that reloading brings you to
+                                  the same fragment position
+                                  (true|false)
 -h|--help                         Prints this usage text
+--hashOneBasedIndex=false         Use 1 based indexing for # links to match
+                                  slide number (default is zero based)
+                                  (true|false)
 --hideAddressBar=true             Hides the address bar on mobile devices
                                   (true|false)
 --history=false                   Push each slide change to the browser history
@@ -58,6 +65,8 @@ Options:
                                   pixel support, e.g. "2100px 900px)
 --parallaxBackgroundVertical=0    On slide change, amount of pixels to move
                                   parallax background (vertical)
+--pdfSeparateFragments=true       Prints each fragment on a separate slide
+                                  (true|false)
 --previewLinks=false              Open links in an iframe preview overlay
                                   (true|false)
 --progress=true                   Displays a progress bar at bottom of screen
@@ -317,6 +326,8 @@ OPTIONS=$(getopt -n "$0" \
                 display:, \
                 embedded:, \
                 fragments:, \
+                fragmentInURL:, \
+                hashOneBasedIndex:, \
                 help, \
                 hideAddressBar:, \
                 history:, \
@@ -328,6 +339,7 @@ OPTIONS=$(getopt -n "$0" \
                 parallaxBackgroundImage:, \
                 parallaxBackgroundSize:, \
                 parallaxBackgroundVertical:, \
+                pdfSeparateFragments:, \
                 previewLinks:, \
                 progress:, \
                 question:, \

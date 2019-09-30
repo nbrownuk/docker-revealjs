@@ -8,9 +8,9 @@ ARG VCS_REF
 ENV NPM_CONFIG_LOGLEVEL warn
 
 # Set environment variables for reveal.js GitHub repo
-ENV VERSION=3.6.0 \
+ENV VERSION=3.7.0 \
     REPO=https://github.com/hakimel/reveal.js \
-    SHA1=c044177d84e959c9c41edbb4dbc9b1dffa4b40d1
+    SHA1=ee703aed833aa8c7695ec70a3b49da66b73762ee
 
 RUN set -ex \
     \
